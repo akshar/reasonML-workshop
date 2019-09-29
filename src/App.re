@@ -1,6 +1,44 @@
+open Belt;
+let se = React.string;
+
+
+type shortText = {
+  id: RandomId.t,
+  title: string,
+  answer: string
+};
+
+type formItem =
+| ShorterText(shortText);
+
+type action = 
+| Add(formItem)
+| Update(formItem)
+| Delete(formItem);
+
+let formId = formItem => 
+  switch(formItem) {
+    | ShorterText(shortText) => shortText.id
+  };
+
+let reducer = (state, action) =>
+  switch(action) {
+    | Add(formItem) => state @ [formItem]
+    | Update(formItem) =>
+     List.map(state, x => 
+      RandomId.eq(x |> formId, formItem |> formId) ? formItem : x
+     )
+    | Delete(formItem) => 
+      List.keep(state, x => !RandomId.eq(x |> formId, formItem |> formId))
+};
+
+
 [@react.component]
+
 let make = () => {
-  let se = React.string;
+
+  let(state,disptach) = React.useReducer(reducer,[]);
+
   let headerView =
     <div className="p-2 mb-2"> <p> {se("Form Builder")} </p> </div>;
 
