@@ -33,7 +33,7 @@ let reducer = (state, action) =>
 
 [@react.component]
 let make = () => {
-  let (state, disptach) = React.useReducer(reducer, []);
+  let (state, dispatch) = React.useReducer(reducer, []);
 
   let headerView =
     <div className="p-2 mb-2"> <p> {se("Form Builder")} </p> </div>;
@@ -43,10 +43,22 @@ let make = () => {
       <div className="mb-6">
         <input
           type_="text"
+          value={shortText.title}
+          onChange={event =>
+            dispatch(
+              Update(
+                ShorterText({
+                  ...shortText,
+                  title: ReactEvent.Form.target(event)##value,
+                }),
+              ),
+            )
+          }
           className="outline-none bg-gray-200 p-2 w-full mb-2"
           placeholder="Enter short text title here..."
         />
         <a
+          onClick={_ => dispatch(Delete(ShorterText(shortText)))}
           className="flex items-center justify-end text-xs opacity-50 hover:opacity-100"
           href="#">
           <img src=Icon.trashAlt className="w-2 h-2 inline-block mr-1" />
@@ -65,7 +77,7 @@ let make = () => {
       formItemsView
       <button
         onClick={_ =>
-          disptach(
+          dispatch(
             Add(
               ShorterText({id: RandomId.generate(), title: "", answer: ""}),
             ),
