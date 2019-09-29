@@ -1,1 +1,1 @@
-ReactDOMRe.renderToElementWithId(<DesignScale />, "app");
+ReactDOMRe.renderToElementWithId(<App />, "app");
